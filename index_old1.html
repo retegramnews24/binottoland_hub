@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+
+<html lang="it">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no" name="viewport"/>
+<meta content="#090a12" name="theme-color"/>
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
+<title>BINOTTOLAND HUB</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{color-scheme:dark;--bg:#090a12;--surface:#121522;--surface2:#1a2030;--surface3:#242c40;--line:rgba(255,255,255,.075);--text:#f5f6fb;--muted:#929bb0;--purple:#9b75ff;--pink:#f36aa5;--cyan:#68[...]
+@supports not(height:100dvh){:root{--app-h:100vh}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:Inter,-apple-system,Bli[...]
+.topbar{flex-shrink:0;position:relative;display:flex;align-items:center;justify-content:center;min-height:58px;padding:calc(7px + var(--tg-t)) var(--pad) 8px;border-bottom:1px solid var(--line);ba[...]
+#main{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;padding:0 var(--pad) 22px;scrollbar-width:thin;scrollbar-color:#303951 transparent}#main::-webkit-scrollbar{width:3px}#main::-we[...]
+.welcome{padding:18px 17px 17px;border:1px solid rgba(174,145,255,.19);border-radius:23px;background:linear-gradient(125deg,rgba(117,77,211,.22),rgba(32,39,62,.72) 58%,rgba(42,26,55,.7));position:[...]
+.section-heading{display:flex;align-items:center;justify-content:space-between;margin:19px 1px 11px}.section-heading h2{font-size:14px;letter-spacing:.01em;margin:0;font-weight:800}.section-headin[...]
+.quick-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.quick-card{padding:13px;border-radius:16px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;ga[...]
+.bottom-nav{flex-shrink:0;height:calc(var(--nav-h) + max(var(--safe-b),var(--tg-b)));padding:6px var(--pad) max(5px,var(--safe-b),var(--tg-b));display:grid;grid-template-columns:repeat(5,minmax(0,[...]
+.page-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:4px 0 13px}.page-head h1{margin:0;font-size:21px;letter-spacing:-.03em}.page-head p{margin:4px 0 0;font-siz[...]
+.feed-form{display:flex;gap:8px;margin:12px 0}.feed-form input{flex:1;min-width:0}.feed-list{display:grid;gap:9px}.feed-item{padding:13px;border:1px solid var(--line);border-radius:15px;background[...]
+.toast{position:fixed;left:50%;bottom:calc(var(--nav-h) + max(var(--safe-b),var(--tg-b)) + 12px);transform:translate(-50%,15px);background:#252b3c;border:1px solid var(--line);border-radius:30px;p[...]
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.68);backdrop-filter:blur(12px);z-index:50;display:none;align-items:flex-end;justify-content:center}.modal.open{display:flex}.modal-card{width:1[...]
+
+/* Sezione Giochi e moduli a tutto schermo */
+.topbar .brand-name{font-size:15px;letter-spacing:.055em;white-space:nowrap}
+.topbar .brand{max-width:calc(100% - 90px)}
+.games{--card-tint:rgba(117,83,190,.24);--glow:rgba(162,125,255,.2);--icon-bg:rgba(157,117,255,.16);--icon-color:#c6b0ff}
+.bottom-nav{grid-template-columns:repeat(5,minmax(0,1fr));gap:2px}
+.nav-btn span{font-size:8.5px;letter-spacing:.015em}
+#main,.screen{min-width:0;max-width:100%}
+.game-list{display:grid;gap:9px;width:100%;max-width:100%;min-width:0;overflow:hidden}
+.game-card{display:flex;align-items:center;gap:10px;width:100%;max-width:100%;min-width:0;overflow:hidden;padding:11px;border:1px solid var(--line);border-radius:15px;background:linear-gradient(12[...]
+.game-icon{width:44px;height:44px;flex:0 0 44px;border-radius:13px;display:grid;place-items:center;background:rgba(157,117,255,.15);color:#cbb7ff;font-size:23px;overflow:hidden}
+.game-copy{flex:1 1 auto;min-width:0;max-width:100%;overflow:hidden}.game-copy strong{display:block;max-width:100%;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.game-co[...]
+.game-actions{display:flex;gap:6px;flex:0 0 auto;min-width:0;max-width:100%}.game-actions button{padding:8px 9px;min-width:58px;max-width:100%;white-space:nowrap;flex:0 0 auto}
+.tetris-icon{display:grid;grid-template-columns:repeat(2,13px);grid-template-rows:repeat(2,13px);gap:2px;align-content:center;justify-content:center;background:rgba(91,211,222,.12)}.tetris-icon i{[...]
+.game-card.builtin.tetris-card{background:linear-gradient(115deg,rgba(91,211,222,.13),rgba(24,31,49,.9));border-color:#65dce535}
+.game-disclaimer{width:100%;max-width:100%;min-width:0;overflow-wrap:anywhere}
+/* I moduli occupano l'intero viewport e nascondono SEMPRE l'interfaccia Hub sottostante. */
+.tv-layer,.radio-layer,.game-layer{position:fixed;inset:0;width:100vw;height:var(--app-h,100dvh);z-index:500;background:#090a12;display:none;overflow:hidden;isolation:isolate}
+.tv-layer.open,.radio-layer.open,.game-layer.open{display:block}
+.tv-frame,.game-frame{display:block;width:100%;height:100%;border:0;background:#090a12}
+/* La barra e tutta la shell Hub non devono restare visibili dietro i lettori. */
+body.module-open #app>.topbar,
+body.module-open #app>#main,
+body.module-open #app>.bottom-nav,
+body.module-open #app>.audio-dock,
+body.module-open #app>.toast,
+body.module-open #app>.modal{display:none!important;visibility:hidden!important;pointer-events:none!important}
+body.module-open #app>.tv-layer.open,
+body.module-open #app>.radio-layer.open,
+body.module-open #app>.game-layer.open{display:block!important;visibility:visible!important;pointer-events:auto!important}
+.game-layer{z-index:510}.game-topbar{height:calc(48px + env(safe-area-inset-top,0px));padding:env(safe-area-inset-top,0px) 12px 0;display:flex;align-items:center;gap:10px;background:#090a12;border[...]
+.game-topbar strong{font-size:13px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.game-close{width:34px;height:34px;border:1px solid var(--line);border-radius:11px;b[...]
+@media(max-width:360px){.nav-btn span{font-size:7.5px}.nav-btn svg{width:17px;height:17px}.game-card{gap:8px;padding:9px}.game-icon{width:38px;height:38px;flex-basis:38px}.game-actions{gap:4px}.ga[...]
+
+/* DAB RADIO: iframe pieno schermo, incluso lo spazio occupato dalla barra Hub nascosta. */
+.radio-layer{z-index:505;background:#0a0a0f}
+.radio-layer .tv-frame{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;background:#0a0a0f}
+
+/* BINOTTOLAND HUB – identità grafica ufficiale */
+.topbar .brand{display:flex;align-items:center;justify-content:center;gap:9px;text-align:left;line-height:1.05;max-width:calc(100% - 54px)}
+.brand-mascot{width:39px;height:39px;flex:0 0 39px;object-fit:cover;object-position:50% 16%;border-radius:50%;border:1px solid rgba(255,255,255,.18);box-shadow:0 3px 14px rgba(0,0,0,.28)}
+.brand-copy{min-width:0;text-align:left}.brand-name{font-size:clamp(15px,4.5vw,20px);letter-spacing:.07em;white-space:nowrap}.brand-sub{font-size:8px;letter-spacing:.16em;margin-top:4px}
+.welcome{display:grid;grid-template-columns:minmax(0,1fr) 116px;align-items:center;gap:8px;padding:15px 14px;min-height:174px}
+.welcome-copy{position:relative;z-index:1;min-width:0}.welcome h1{font-size:clamp(18px,5vw,23px);line-height:1.12;max-width:none}.welcome p{max-width:none;font-size:11px}
+.welcome-art{position:relative;z-index:1;width:116px;height:144px;object-fit:cover;object-position:50% 15%;border-radius:16px;border:1px solid rgba(255,255,255,.15);box-shadow:0 7px 22px rgba(0,0,[...]
+.module-card{min-height:142px}.module-icon.logo-icon{width:61px;height:61px;padding:0;border:0;background:transparent;border-radius:15px;overflow:hidden;box-shadow:0 5px 14px rgba(0,0,0,.24)}
+.module-icon.logo-icon:has(.module-logo){background:transparent}.module-logo{display:block;width:100%;height:100%;object-fit:cover;border-radius:15px}
+.section-logo{width:70px;height:70px;object-fit:cover;border-radius:17px}
+.bottom-nav{grid-template-columns:repeat(4,minmax(0,1fr))}.nav-btn img.nav-logo{width:25px;height:25px;object-fit:cover;border-radius:6px;display:block}.nav-btn span{font-size:9px}
+.quick-card{min-width:0}.quick-symbol{font-size:22px;line-height:1;flex:0 0 25px}.quick-card>span:last-child{min-width:0}.quick-card strong{font-size:11px}.quick-card span span{overflow-wrap:anywh[...]
+@media(max-width:380px){.welcome{grid-template-columns:minmax(0,1fr) 96px;min-height:155px;padding:13px 12px}.welcome-art{width:96px;height:125px}.welcome h1{font-size:19px}.brand-mascot{width:35p[...]
+@media(min-width:720px){.welcome{grid-template-columns:minmax(0,1fr) 170px;min-height:220px;padding:22px}.welcome-art{width:170px;height:190px}.welcome h1{max-width:480px;font-size:30px}.welcome p[...]
+
+/* Giochi integrati Binottoland: 2048 Classic, Moon Lander e Neon Snake */
+.builtin-icon{width:48px;height:48px;flex:0 0 48px;border-radius:14px;display:grid;place-items:center;overflow:hidden;border:1px solid #ffffff24;box-shadow:0 5px 16px #0005}
+.merge-icon{display:grid;grid-template-columns:repeat(2,1fr);gap:3px;padding:5px;background:#302941}.merge-icon i{display:grid;place-items:center;border-radius:4px;background:#eee4da;color:#514337[...]
+.lander-icon{background:radial-gradient(circle at 50% 30%,#3b6688,#101a30 75%);font-size:26px}
+.snake-icon{background:radial-gradient(circle at 35% 25%,#1b6656,#0b2428 78%);font-size:25px}.game-card.builtin.snake-card{background:linear-gradient(115deg,rgba(76,210,173,.14),rgba(24,31,49,.9))[...]
+.game-card.builtin{background:linear-gradient(115deg,rgba(148,117,255,.15),rgba(24,31,49,.9));border-color:#b9a0ff35}
+.game-card.builtin.lander-card{background:linear-gradient(115deg,rgba(89,193,221,.14),rgba(24,31,49,.9));border-color:#7addec35}
+.game-built-in{font-size:8px;color:#d4bdff;font-weight:900;letter-spacing:.08em;margin-top:5px;display:block}
+
+
+/* Layout giochi: nessun elemento può allargare la pagina oltre il viewport. */
+#screen-games,.game-list,.game-card,.game-copy,.game-disclaimer{min-width:0;max-width:100%;width:100%}#screen-games{overflow-x:hidden}#screen-games .game-card{overflow:hidden}#screen-games .game-c[...]
+</style>
+</head>
+<body>
+<div id="app">
+<header class="topbar">
+<div class="brand"><img alt="Mascotte Binottoland" class="brand-mascot" src="data:image/webp;base64,UklGRtwBAQBXRUJQVlA4INABAQCQUwOdASovAjACPkkejEQioaEVWd8QKASEtjdz4BJKq0tas5WBywf7f8t+tE5d6X/EftJ/[...]
+<div class="top-actions">
+<button aria-label="Impostazioni" class="icon-btn" id="settingsShortcut"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path [...]
+</div>
+</header>
+<main id="main">
+<section class="screen active" id="screen-home">
+<div class="welcome"><div class="welcome-copy"><div class="welcome-kicker">Benvenuto in Binottoland</div><h1>Il tuo mondo multimediale, in un solo posto.</h1><p>TV LIVE, DAB RADIO e i giochi dell[...]
+<div class="section-heading"><h2>Esplora il Media Hub</h2><small>3 sezioni</small></div>
+<div class="module-grid">
+<button class="module-card tv" data-go="tv"><span class="module-icon logo-icon"><img alt="Logo TV LIVE" class="module-logo" loading="eager" src="data:image/webp;base64,UklGRjIUAABXRUJQVlA4ICYUAAD[...]
+<button class="module-card radio" data-go="radio"><span class="module-icon logo-icon"><img alt="Logo DAB Radio" class="module-logo" loading="eager" src="data:image/webp;base64,UklGRnQUAABXRUJQVlA[...]
+<button class="module-card games" data-go="games"><span class="module-icon"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><path d="M6.5 9h11a4 4 0 0 1 3.9 4.9l-1 4[...]
+</div>
+<div class="section-heading"><h2>La tua raccolta</h2><small>Accesso rapido</small></div>
+<div class="quick-row"><button class="quick-card" data-go="games"><span class="quick-symbol">🎮</span><span><strong>Sala giochi</strong><span>Apri i giochi di Binottoland</span></span></button>[...]
+<div class="source-note">TV LIVE e DAB RADIO sono integrate direttamente nel Hub. La sala giochi raccoglie i titoli selezionati per la community Binottoland.</div>
+</section>
+<section class="screen" id="screen-tv">
+<div class="page-head"><div><h1>TV LIVE</h1><p>La televisione di Binottoland</p></div><span class="pill">◉ INTEGRATA</span></div>
+<div class="empty-panel"><div class="empty-icon"><img alt="TV LIVE" class="section-logo" src="data:image/webp;base64,UklGRjIUAABXRUJQVlA4ICYUAADwVwCdASoAAQABPjEYi0OiIaESqkyEIAMEpu/GvhoOCUX2J4nf8y[...]
+</section>
+<section class="screen games" id="screen-games">
+<div class="page-head"><div><h1>GIOCHI</h1><p>La sala giochi della community Binottoland</p></div><span class="pill" id="gamesCount">4 giochi</span></div>
+<div class="game-list" id="gamesList"></div>
+<div class="module-link-panel game-disclaimer" style="margin:14px 0 12px"><h3>Hai un gioco o un'app da consigliare?</h3><p>Scrivici nella community Binottoland: valuteremo la proposta e, se adatt[...]
+</section>
+</main>
+<nav aria-label="Navigazione principale" class="bottom-nav">
+<button class="nav-btn active" data-screen="home"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1Z[...]
+<button aria-label="TV" class="nav-btn" data-screen="tv"><img alt="TV LIVE" class="nav-logo" src="data:image/webp;base64,UklGRjIUAABXRUJQVlA4ICYUAADwVwCdASoAAQABPjEYi0OiIaESqkyEIAMEpu/GvhoOCUX2J4[...]
+<button aria-label="RADIO" class="nav-btn" data-screen="radio"><img alt="DAB Radio" class="nav-logo" src="data:image/webp;base64,UklGRnQUAABXRUJQVlA4IGgUAABQYwCdASoAAQABPjEYikOiIaET2bRoIAMEsbdsk3[...]
+<button class="nav-btn" data-screen="games"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><path d="M6.5 9h11a4 4 0 0 1 3.9 4.9l-1 4a2 2 0 0 1-3.3 1l-2.2-2H9.1l-2.2[...]
+</nav>
+<div aria-label="TV LIVE integrata" class="tv-layer" id="tvLayer"><iframe allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowfullscreen="" class="tv-frame" id="tvFrame" title=[...]
+<div aria-label="DAB RADIO integrata" class="tv-layer radio-layer" id="radioLayer"><iframe allow="autoplay; fullscreen; encrypted-media" allowfullscreen="" class="tv-frame" id="radioFrame" loadin[...]
+<div aria-label="Gioco" class="game-layer" id="gameLayer"><div class="game-topbar"><button aria-label="Chiudi gioco" class="game-close" id="closeGame">×</button><strong id="gameLayerTitle">Binot[...]
+<div class="toast" id="toast"></div>
+<div aria-modal="true" class="modal" id="settingsModal" role="dialog"><div class="modal-card"><div class="modal-head"><h2>Informazioni Hub</h2><button class="close-modal" data-close="settingsModa[...]
+<p style="font-size:11px;color:var(--muted);line-height:1.5">TV LIVE e DAB RADIO sono integrate direttamente in BINOTTOLAND HUB. I giochi disponibili sono selezionati e verificati dagli amministr[...]
+<div class="source-note"><strong>Consiglia un gioco o un'app</strong><br/>Hai un suggerimento per la community? Scrivici nel gruppo Binottoland: valuteremo la proposta per un prossimo aggiornamen[...]
+<div class="settings-actions"><button class="primary-btn" id="saveSettings" style="grid-column:1/-1">Chiudi</button></div>
+</div></div>
+<script>(()=>{
+'use strict';
+const $=id=>document.getElementById(id), tg=window.Telegram?.WebApp||null;
+const TV_LIVE_DOCUMENT=new TextDecoder().decode(Uint8Array.from(atob('PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9Iml0Ij4KPGhlYWQ+CjxtZXRhIGNoYXJzZXQ9IlVURi04Ij4KPG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9I[...]
+const DAB_RADIO_DOCUMENT=new TextDecoder().decode(Uint8Array.from(atob('PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9Iml0Ij4KPGhlYWQ+CiAgPG1ldGEgY2hhcnNldD0iVVRGLTgiPgogIDxtZXRhIG5hbWU9InZpZXdwb3J0IiBjb25[...]
+const CLASSIC_2048_DOCUMENT=new TextDecoder().decode(Uint8Array.from(atob('PCFkb2N0eXBlIGh0bWw+CjxodG1sIGxhbmc9Iml0Ij4KPGhlYWQ+CjxtZXRhIGNoYXJzZXQ9InV0Zi04Ij4KPG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRl[...]
+const MOON_LANDER_DOCUMENT=new TextDecoder().decode(Uint8Array.from(atob('PCFkb2N0eXBlIGh0bWw+PGh0bWwgbGFuZz0iaXQiPjxoZWFkPjxtZXRhIGNoYXJzZXQ9InV0Zi04Ij48bWV0YSBuYW1lPSJ2aWV3cG9ydCIgY29udGVudD0id[...]
+const SNAKE_DOCUMENT=new TextDecoder().decode(Uint8Array.from(atob('PCFkb2N0eXBlIGh0bWw+CjxodG1sIGxhbmc9Iml0Ij4KPGhlYWQ+CjxtZXRhIGNoYXJzZXQ9InV0Zi04Ij4KPG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9Ind[...]
+const TETRIS_DOCUMENT=new TextDecoder().decode(Uint8Array.from(atob('PCFkb2N0eXBlIGh0bWw+CjxodG1sIGxhbmc9Iml0Ij4KPGhlYWQ+CjxtZXRhIGNoYXJzZXQ9InV0Zi04Ij4KPG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9In[...]
+
+const telegramUserId=String(tg?.initDataUnsafe?.user?.id||'');
+const userScope=telegramUserId?`tg_${telegramUserId}`:'browser';
+const KEYS={state:`binottoland_hub_v2_${userScope}`,cloud:'binottoland_hub_v2_personal'};
+
+const state={games:[]};
+let activeScreen='home',toastTimer;
+const tvLayer=$('tvLayer'),tvFrame=$('tvFrame'),radioLayer=$('radioLayer'),radioFrame=$('radioFrame'),gameLayer=$('gameLayer'),gameFrame=$('gameFrame');
+let tvLoaded=false,radioLoaded=false,tvReady=false,radioReady=false;
+tvFrame.addEventListener('load',()=>{tvReady=true});
+radioFrame.addEventListener('load',()=>{radioReady=true});
+function safeURL(value){try{const u=new URL(String(value||''));return ['https:','http:'].includes(u.protocol)?u.href:''}catch{return ''}}
+function toast(message){const el=$('toast');el.textContent=message;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2400)}
+function haptic(){try{tg?.HapticFeedback?.impactOccurred('light')}catch{}}
+function updateViewport(){const stable=tg?.viewportStableHeight||tg?.viewportHeight;const height=window.visualViewport?.height||stable||window.innerHeight;document.documentElement.style.setProper[...]
+function cloudGet(key){return new Promise(resolve=>{try{tg.CloudStorage.getItem(key,(err,value)=>resolve(err?'':value||''))}catch{resolve('')}})}
+function cloudSet(key,value){return new Promise(resolve=>{try{tg.CloudStorage.setItem(key,value,err=>resolve(!err))}catch{resolve(false)}})}
+function persist(){state.games=[];try{localStorage.setItem(KEYS.state,JSON.stringify(state))}catch(error){console.warn('Salvataggio locale non riuscito',error)}if(tg?.CloudStorage)cloudSet(`${KEY[...]
+function hydrate(){state.games=[]}
+async function loadState(){state.games=[];try{localStorage.setItem(KEYS.state,JSON.stringify(state))}catch{};renderGames();if(tg?.CloudStorage)cloudSet(`${KEYS.cloud}_games`,'[]')}
+function initTelegram(){if(!tg)return;try{tg.ready();tg.expand();tg.setHeaderColor?.('#090a12');tg.setBackgroundColor?.('#090a12');tg.requestFullscreen?.();tg.BackButton?.onClick(()=>{if(gameLaye[...]
+function go(screen){if(screen==='tv'){openTV();return}if(screen==='radio'){openRadio();return}if(!$(`screen-${screen}`))return;activeScreen=screen;document.querySelectorAll('.screen').forEach(sec[...]
+document.querySelectorAll('[data-screen]').forEach(button=>button.addEventListener('click',()=>go(button.dataset.screen)));
+document.querySelectorAll('[data-go]').forEach(button=>button.addEventListener('click',()=>go(button.dataset.go)));
+$('settingsShortcut').onclick=()=>$('settingsModal').classList.add('open');
+document.addEventListener('click',event=>{const action=event.target.closest('[data-action]');if(action?.dataset.action==='open-tv')openTV()});
+document.querySelectorAll('[data-close]').forEach(button=>button.onclick=()=>$(button.dataset.close).classList.remove('open'));
+document.querySelectorAll('.modal').forEach(modal=>modal.addEventListener('click',event=>{if(event.target===modal)modal.classList.remove('open')}));
+$('saveSettings').onclick=()=>{$('settingsModal').classList.remove('open');toast('Impostazioni chiuse')};
+function renderGames(){
+ const list=$('gamesList');list.replaceChildren();
+ const catalog=[
+  {kind:'2048',title:'2048 Classic',description:'Il puzzle originale · Griglia 4 × 4 · Unisci le tessere uguali'},
+  {kind:'lander',title:'Moon Lander',description:'Missioni lunari casuali · Terreni e piattaforme sempre diversi'},
+  {kind:'snake',title:'Neon Snake',description:'Raccogli le sfere · Controlli touch · Velocità crescente'},
+  {kind:'tetris',title:'Tetris',description:'Completa le righe · Pezzi classici · Livelli e velocità crescenti'}
+ ];
+ $('gamesCount').textContent=`${catalog.length} giochi`;
+ catalog.forEach(({kind,title,description})=>{
+  const card=document.createElement('article');card.className='game-card builtin '+(kind==='lander'?'lander-card ':kind==='snake'?'snake-card ':kind==='tetris'?'tetris-card ':'');
+  const icon=document.createElement('div');icon.className='game-icon '+(kind==='2048'?'merge-icon':kind==='lander'?'lander-icon':kind==='snake'?'snake-icon':'tetris-icon');
+  if(kind==='2048'){['2','4','8','16'].forEach(n=>{const t=document.createElement('i');t.textContent=n;icon.append(t)})}
+  else if(kind==='lander')icon.textContent='🚀';
+  else if(kind==='snake')icon.textContent='🐍';
+  else for(let i=0;i<4;i++){const t=document.createElement('i');icon.append(t)}
+  const copy=document.createElement('div');copy.className='game-copy';const name=document.createElement('strong');name.textContent=title;const desc=document.createElement('small');desc.textConten[...]
+  const actions=document.createElement('div');actions.className='game-actions';const play=document.createElement('button');play.className='primary-btn';play.textContent='Gioca';play.onclick=()=>o[...]
+ });
+}
+function syncModuleShell(){const open=tvLayer.classList.contains('open')||radioLayer.classList.contains('open')||gameLayer.classList.contains('open');document.body.classList.toggle('module-open',[...]
+function openGame(game){$('gameLayerTitle').textContent=game.title;gameFrame.removeAttribute('src');if(game.builtin==='2048')gameFrame.srcdoc=CLASSIC_2048_DOCUMENT;else if(game.builtin==='lander'[...]
+function closeGame(fromHistory=false){if(!gameLayer.classList.contains('open'))return;gameLayer.classList.remove('open');gameFrame.removeAttribute('srcdoc');gameFrame.src='about:blank';syncModule[...]
+$('closeGame').onclick=()=>closeGame();
+function openTV(){if(!tvLoaded){tvFrame.srcdoc=TV_LIVE_DOCUMENT;tvLoaded=true}tvLayer.classList.add('open');syncModuleShell();try{history.pushState({binottolandTV:true},'')}catch{}haptic()}
+function closeTV(fromHistory=false){if(!tvLayer.classList.contains('open'))return;try{tvFrame.contentWindow?.postMessage({type:'binottoland-tv-stop'},'*')}catch{}tvLayer.classList.remove('open');[...]
+function openRadio(){if(!radioLoaded){radioFrame.srcdoc=DAB_RADIO_DOCUMENT;radioLoaded=true}radioLayer.classList.add('open');syncModuleShell();try{history.pushState({binottolandRadio:true},'')}ca[...]
+function closeRadio(fromHistory=false){if(!radioLayer.classList.contains('open'))return;try{radioFrame.contentWindow?.postMessage({type:'binottoland-radio-stop'},'*')}catch{}radioLayer.classList.[...]
+window.addEventListener('message',event=>{if(event.source===tvFrame.contentWindow&&event.data?.type==='binottoland-tv-close'){closeTV();return}if(event.source===radioFrame.contentWindow&&event.da[...]
+window.addEventListener('popstate',()=>{if(gameLayer.classList.contains('open'))closeGame(true);else if(radioLayer.classList.contains('open'))closeRadio(true);else if(tvLayer.classList.contains('[...]
+initTelegram();loadState();
+window.addEventListener('resize',updateViewport);window.visualViewport?.addEventListener('resize',updateViewport);window.addEventListener('orientationchange',()=>setTimeout(updateViewport,180));w[...]
+})();
+</script>
+</div></body>
+</html>
