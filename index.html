@@ -20,7 +20,7 @@
       --cyan: #72e7ff;
       --green: #75e7ac;
       --yellow: #ffd166;
-      --shadow: 0 14px 34px rgba(0,0,0,.28);
+      --shadow: 0 16px 34px rgba(0,0,0,.28);
       --radius: 18px;
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -37,7 +37,7 @@
 
     body {
       background:
-        radial-gradient(circle at top, rgba(158,123,255,.19), transparent 22%),
+        radial-gradient(circle at top, rgba(158,123,255,.18), transparent 22%),
         radial-gradient(circle at bottom right, rgba(114,231,255,.11), transparent 24%),
         var(--bg);
     }
@@ -55,18 +55,18 @@
       border-left: 1px solid var(--line);
       border-right: 1px solid var(--line);
       position: relative;
-      padding-bottom: 80px;
+      padding-bottom: 84px;
     }
 
     .topbar {
       position: sticky;
       top: 0;
-      z-index: 20;
+      z-index: 50;
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: calc(12px + var(--safe-top)) 16px 12px;
-      background: rgba(9, 13, 21, .82);
+      background: rgba(9,13,21,.82);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--line);
     }
@@ -111,7 +111,7 @@
     }
 
     #main {
-      padding: 16px 16px 12px;
+      padding: 16px 16px 10px;
     }
 
     .screen {
@@ -120,6 +120,12 @@
 
     .screen.active {
       display: block;
+      animation: fadeIn .22s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .hero {
@@ -160,7 +166,7 @@
       flex-wrap: wrap;
     }
 
-    .primary-btn, .secondary-btn, .ghost-btn {
+    .primary-btn, .secondary-btn, .ghost-btn, .chip {
       border: none;
       border-radius: 12px;
       padding: 10px 14px;
@@ -189,13 +195,38 @@
       font-size: 11px;
     }
 
+    .chip-group {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+
+    .chip-group::-webkit-scrollbar { display: none; }
+
+    .chip {
+      white-space: nowrap;
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      padding: 8px 10px;
+      font-size: 11px;
+    }
+
+    .chip.active {
+      background: rgba(158,123,255,.12);
+      border-color: rgba(158,123,255,.35);
+      color: var(--text);
+    }
+
     .section {
       margin-top: 26px;
     }
 
     .section-head {
       display: flex;
-      align-items: end;
+      align-items: flex-end;
       justify-content: space-between;
       margin-bottom: 10px;
     }
@@ -273,11 +304,22 @@
       justify-content: space-between;
       gap: 10px;
       box-shadow: inset 0 1px 0 rgba(255,255,255,.02);
+      position: relative;
+      overflow: hidden;
     }
 
     .card.tv { border-color: rgba(114,231,255,.22); }
     .card.radio { border-color: rgba(117,231,172,.22); }
     .card.game { border-color: rgba(255,114,180,.22); }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
+    }
 
     .badge {
       display: inline-block;
@@ -327,6 +369,25 @@
       color: var(--muted);
       font-size: 10px;
       margin-top: 6px;
+    }
+
+    .favorite-toggle {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .favorite-toggle.active {
+      color: var(--yellow);
+      border-color: rgba(255,209,102,.4);
+      background: rgba(255,209,102,.08);
     }
 
     .community-item {
@@ -388,16 +449,6 @@
       letter-spacing: .08em;
       text-transform: uppercase;
       font-weight: 800;
-    }
-
-    .empty-panel {
-      text-align: center;
-      border: 1px solid var(--line);
-      background: var(--surface);
-      border-radius: 22px;
-      padding: 24px 14px;
-      color: var(--muted);
-      line-height: 1.6;
     }
 
     .input-row {
@@ -491,26 +542,11 @@
     <main id="main"></main>
 
     <nav class="bottom-nav" aria-label="Navigazione principale">
-      <button class="nav-btn active" data-screen="home">
-        <span class="nav-icon">🏠</span>
-        Home
-      </button>
-      <button class="nav-btn" data-screen="tv">
-        <span class="nav-icon">📺</span>
-        TV
-      </button>
-      <button class="nav-btn" data-screen="radio">
-        <span class="nav-icon">📻</span>
-        Radio
-      </button>
-      <button class="nav-btn" data-screen="games">
-        <span class="nav-icon">🎮</span>
-        Giochi
-      </button>
-      <button class="nav-btn" data-screen="community">
-        <span class="nav-icon">👥</span>
-        Community
-      </button>
+      <button class="nav-btn active" data-screen="home"><span class="nav-icon">🏠</span>Home</button>
+      <button class="nav-btn" data-screen="tv"><span class="nav-icon">📺</span>TV</button>
+      <button class="nav-btn" data-screen="radio"><span class="nav-icon">📻</span>Radio</button>
+      <button class="nav-btn" data-screen="games"><span class="nav-icon">🎮</span>Giochi</button>
+      <button class="nav-btn" data-screen="community"><span class="nav-icon">👥</span>Community</button>
     </nav>
   </div>
 
@@ -528,7 +564,7 @@
         { type: 'radio', title: 'Radio Nightwave', meta: 'Ascoltata ieri', category: 'Radio' },
         { type: 'game', title: '2048 Classic', meta: 'Ultimo punteggio: 1024', category: 'Gioco' }
       ],
-      favorites: [
+      favoritesSeed: [
         { type: 'tv', title: 'TV Binottoland', meta: 'Preferita', category: 'TV' },
         { type: 'radio', title: 'DAB Radio', meta: 'Preferita', category: 'Radio' },
         { type: 'game', title: 'Neon Snake', meta: 'Salvato', category: 'Gioco' }
@@ -539,54 +575,102 @@
         { title: 'Suggerimento team', text: 'Nuovo canale dedicato a live e contenuti culturali.', votes: 67 }
       ],
       tv: [
-        { title: 'Binotto Live', subtitle: 'Notizie, talk, intrattenimento', badge: 'LIVE' },
-        { title: 'Channel 24', subtitle: 'News e aggiornamenti comunitari', badge: 'LIVE' },
-        { title: 'Cultura Hub', subtitle: 'Documentari e approfondimenti', badge: 'NEW' },
-        { title: 'Sport Arena', subtitle: 'Eventi e live sportive', badge: 'LIVE' },
-        { title: 'Music Box', subtitle: 'Video e mix musicali', badge: 'POP' },
-        { title: 'Binotto Stories', subtitle: 'Momenti e contenuti della community', badge: 'HOT' }
+        { title: 'Binotto Live', subtitle: 'Notizie, talk, intrattenimento', badge: 'LIVE', type: 'tv' },
+        { title: 'Channel 24', subtitle: 'News e aggiornamenti comunitari', badge: 'LIVE', type: 'tv' },
+        { title: 'Cultura Hub', subtitle: 'Documentari e approfondimenti', badge: 'NEW', type: 'tv' },
+        { title: 'Sport Arena', subtitle: 'Eventi e live sportive', badge: 'LIVE', type: 'tv' },
+        { title: 'Music Box', subtitle: 'Video e mix musicali', badge: 'POP', type: 'tv' },
+        { title: 'Binotto Stories', subtitle: 'Momenti e contenuti della community', badge: 'HOT', type: 'tv' }
       ],
       radio: [
-        { title: 'Binotto Radio', subtitle: 'Musica + talk', badge: 'POP' },
-        { title: 'Nightwave', subtitle: 'Mix, chill, electronic', badge: 'CHILL' },
-        { title: 'City FM', subtitle: 'Top hits e news', badge: 'HITS' },
-        { title: 'Talkzone', subtitle: 'Discussioni e interviste', badge: 'TALK' },
-        { title: 'Lounge 88', subtitle: 'Ambient e jams', badge: 'LOUNGE' },
-        { title: 'Weekend Mix', subtitle: 'Set live e playlist', badge: 'LIVE' }
+        { title: 'Binotto Radio', subtitle: 'Musica + talk', badge: 'POP', type: 'radio' },
+        { title: 'Nightwave', subtitle: 'Mix, chill, electronic', badge: 'CHILL', type: 'radio' },
+        { title: 'City FM', subtitle: 'Top hits e news', badge: 'HITS', type: 'radio' },
+        { title: 'Talkzone', subtitle: 'Discussioni e interviste', badge: 'TALK', type: 'radio' },
+        { title: 'Lounge 88', subtitle: 'Ambient e jams', badge: 'LOUNGE', type: 'radio' },
+        { title: 'Weekend Mix', subtitle: 'Set live e playlist', badge: 'LIVE', type: 'radio' }
       ],
       games: [
-        { title: '2048 Classic', subtitle: 'Puzzle classico · 4x4', badge: 'Arcade' },
-        { title: 'Moon Lander', subtitle: 'Missioni lunari · casuali', badge: 'Action' },
-        { title: 'Neon Snake', subtitle: 'Touch controls · velocità', badge: 'Arcade' },
-        { title: 'Tetris', subtitle: 'Combinazioni e line clear', badge: 'Puzzle' },
-        { title: 'Memory Grid', subtitle: 'Celebrazione visiva', badge: 'Brain' },
-        { title: 'Challenge Run', subtitle: 'Obiettivi quotidiani', badge: 'Daily' }
+        { title: '2048 Classic', subtitle: 'Puzzle classico · 4x4', badge: 'Arcade', type: 'game' },
+        { title: 'Moon Lander', subtitle: 'Missioni lunari · casuali', badge: 'Action', type: 'game' },
+        { title: 'Neon Snake', subtitle: 'Touch controls · velocità', badge: 'Arcade', type: 'game' },
+        { title: 'Tetris', subtitle: 'Combinazioni e line clear', badge: 'Puzzle', type: 'game' },
+        { title: 'Memory Grid', subtitle: 'Celebrazione visiva', badge: 'Brain', type: 'game' },
+        { title: 'Challenge Run', subtitle: 'Obiettivi quotidiani', badge: 'Daily', type: 'game' }
       ]
     };
 
     const state = {
       activeScreen: 'home',
-      favorites: new Set(['Binotto Radio', 'Neon Snake'])
+      favorites: new Set(['TV Binottoland', 'DAB Radio', 'Neon Snake']),
+      filters: {
+        tv: 'all',
+        radio: 'all',
+        games: 'all'
+      }
     };
 
     const main = document.getElementById('main');
 
-    function cardMarkup(type, title, subtitle, badge, actionLabel = 'Apri') {
-      const cardType = type === 'tv' ? 'tv' : type === 'radio' ? 'radio' : 'game';
+    function getFavoriteState(title) {
+      return state.favorites.has(title);
+    }
+
+    function toggleFavorite(title) {
+      if (state.favorites.has(title)) {
+        state.favorites.delete(title);
+      } else {
+        state.favorites.add(title);
+      }
+      renderScreen();
+    }
+
+    function createLiveCard(item) {
+      const cardType = item.type === 'tv' ? 'tv' : item.type === 'radio' ? 'radio' : 'game';
       return `
         <article class="card ${cardType}">
-          <span class="badge ${cardType}">${badge}</span>
+          <span class="badge ${cardType}">${item.badge}</span>
           <div>
-            <h3>${title}</h3>
-            <p>${subtitle}</p>
+            <h3>${item.title}</h3>
+            <p>${item.subtitle}</p>
           </div>
-          <button class="action" data-action="open-${type}">${actionLabel}</button>
+          <button class="action" data-action="open-${item.type}">${item.action}</button>
+        </article>
+      `;
+    }
+
+    function createItemCard(item, compact = false) {
+      const cardType = item.type || 'game';
+      const favoriteActive = getFavoriteState(item.title);
+      const compactClass = compact ? 'mini' : '';
+      return `
+        <article class="card ${compactClass} ${cardType}">
+          <button class="favorite-toggle ${favoriteActive ? 'active' : ''}" data-favorite="${item.title}" title="Aggiungi ai preferiti">★</button>
+          <div>
+            <h3>${item.title}</h3>
+            <p>${item.subtitle || item.meta}</p>
+          </div>
+          <div class="meta">${item.badge || item.category || 'Preferito'}</div>
+          <button class="action" data-action="open-${item.type || 'game'}">${item.action || 'Apri'}</button>
+        </article>
+      `;
+    }
+
+    function createCommunityCard(item) {
+      return `
+        <article class="community-item">
+          <strong>${item.title}</strong>
+          <p>${item.text}</p>
+          <div class="community-row">
+            <span class="votes">${item.votes} voti</span>
+            <button class="ghost-btn">Apri</button>
+          </div>
         </article>
       `;
     }
 
     function renderHome() {
-      const liveHtml = data.live.map(item => cardMarkup(item.type, item.title, item.subtitle, item.badge, item.action)).join('');
+      const liveHtml = data.live.map(createLiveCard).join('');
       const recentHtml = data.recent.map(item => `
         <article class="card mini ${item.type}">
           <div>
@@ -597,8 +681,9 @@
         </article>
       `).join('');
 
-      const favoritesHtml = data.favorites.map(item => `
+      const favoritesHtml = data.favoritesSeed.map(item => `
         <article class="card mini ${item.type}">
+          <button class="favorite-toggle ${getFavoriteState(item.title) ? 'active' : ''}" data-favorite="${item.title}" title="Aggiungi ai preferiti">★</button>
           <div>
             <h3>${item.title}</h3>
             <p>${item.meta}</p>
@@ -607,16 +692,7 @@
         </article>
       `).join('');
 
-      const communityHtml = data.community.map(item => `
-        <article class="community-item">
-          <strong>${item.title}</strong>
-          <p>${item.text}</p>
-          <div class="community-row">
-            <span class="votes">${item.votes} voti</span>
-            <button class="ghost-btn">Apri</button>
-          </div>
-        </article>
-      `).join('');
+      const communityHtml = data.community.map(createCommunityCard).join('');
 
       return `
         <section class="screen active">
@@ -680,94 +756,60 @@
       `;
     }
 
-    function renderTV() {
-      const html = data.tv.map(item => `
-        <article class="card tv">
-          <span class="badge tv">${item.badge}</span>
-          <div>
-            <h3>${item.title}</h3>
-            <p>${item.subtitle}</p>
-          </div>
-          <button class="action" data-action="open-tv">Apri</button>
-        </article>
+    function renderListScreen(kind, items, title, badgeLabel) {
+      const chips = ['all', 'live', 'popular', 'new'];
+      const activeChip = state.filters[kind] || 'all';
+      const chipsHtml = chips.map(chip => `
+        <button class="chip ${chip === activeChip ? 'active' : ''}" data-filter-kind="${kind}" data-filter-value="${chip}">${chip === 'all' ? 'Tutti' : chip === 'live' ? 'Live' : chip === 'popular' ? 'Popolari' : 'Novità'}</button>
       `).join('');
+
+      const filtered = items.filter(item => {
+        if (activeChip === 'all') return true;
+        if (activeChip === 'live') return /live|today|giorno/i.test(item.badge || '');
+        if (activeChip === 'popular') return /pop|hits|arcade/i.test(item.badge || '');
+        if (activeChip === 'new') return /new|hot|daily|giorno/i.test(item.badge || '');
+        return true;
+      });
+
+      const cardsHtml = filtered.map(item => createItemCard(item, false)).join('');
 
       return `
         <section class="screen active">
           <div class="page-header">
-            <h1>TV</h1>
-            <span class="pill">Live</span>
+            <h1>${title}</h1>
+            <span class="pill">${badgeLabel}</span>
           </div>
-          <div class="games-grid">${html}</div>
+
+          <div class="chip-group">${chipsHtml}</div>
+          <div class="games-grid">${cardsHtml}</div>
         </section>
       `;
+    }
+
+    function renderTV() {
+      return renderListScreen('tv', data.tv, 'TV', `${data.tv.length} live`);
     }
 
     function renderRadio() {
-      const html = data.radio.map(item => `
-        <article class="card radio">
-          <span class="badge radio">${item.badge}</span>
-          <div>
-            <h3>${item.title}</h3>
-            <p>${item.subtitle}</p>
-          </div>
-          <button class="action" data-action="open-radio">Ascolta</button>
-        </article>
-      `).join('');
-
-      return `
-        <section class="screen active">
-          <div class="page-header">
-            <h1>Radio</h1>
-            <span class="pill">Streaming</span>
-          </div>
-          <div class="games-grid">${html}</div>
-        </section>
-      `;
+      return renderListScreen('radio', data.radio, 'Radio', `${data.radio.length} stazioni`);
     }
 
     function renderGames() {
-      const html = data.games.map(item => `
-        <article class="card game">
-          <span class="badge game">${item.badge}</span>
-          <div>
-            <h3>${item.title}</h3>
-            <p>${item.subtitle}</p>
-          </div>
-          <button class="action" data-action="play-game">Gioca</button>
-        </article>
-      `).join('');
-
-      return `
-        <section class="screen active">
-          <div class="page-header">
-            <h1>Giochi</h1>
-            <span class="pill">6 titoli</span>
-          </div>
-          <div class="games-grid">${html}</div>
-        </section>
-      `;
+      return renderListScreen('games', data.games, 'Giochi', `${data.games.length} titoli`);
     }
 
     function renderCommunity() {
-      const html = data.community.map(item => `
-        <article class="community-item">
-          <strong>${item.title}</strong>
-          <p>${item.text}</p>
-          <div class="community-row">
-            <span class="votes">${item.votes} voti</span>
-            <button class="ghost-btn">Dettagli</button>
-          </div>
-        </article>
-      `).join('');
-
       return `
         <section class="screen active">
           <div class="page-header">
             <h1>Community</h1>
             <span class="pill">Attiva</span>
           </div>
-          <div class="community-grid">${html}</div>
+
+          <div class="community-grid">
+            ${data.community.map(createCommunityCard).join('')}
+          </div>
+
           <div class="input-row">
             <input type="text" placeholder="Suggerisci un gioco o una proposta..." />
             <button class="primary-btn">Invia</button>
@@ -777,30 +819,51 @@
     }
 
     function renderFavorites() {
-      const html = data.favorites.map(item => `
-        <article class="card mini ${item.type}">
-          <div>
-            <h3>${item.title}</h3>
-            <p>${item.meta}</p>
-          </div>
-          <div class="meta">${item.category}</div>
-        </article>
-      `).join('');
+      const favorites = [
+        ...data.favoritesSeed.filter(item => getFavoriteState(item.title)),
+        ...data.games.filter(item => getFavoriteState(item.title)),
+        ...data.radio.filter(item => getFavoriteState(item.title)),
+        ...data.tv.filter(item => getFavoriteState(item.title))
+      ];
+
+      const unique = Array.from(new Map(favorites.map(item => [item.title, item])).values());
+
+      if (!unique.length) {
+        return `
+          <section class="screen active">
+            <div class="page-header">
+              <h1>Preferiti</h1>
+              <span class="pill">0</span>
+            </div>
+            <div class="empty-panel">Nessun preferito salvato. Aggiungi canali, stazioni o giochi dal cuore.</div>
+          </section>
+        `;
+      }
 
       return `
         <section class="screen active">
           <div class="page-header">
             <h1>Preferiti</h1>
-            <span class="pill">${data.favorites.length}</span>
+            <span class="pill">${unique.length}</span>
           </div>
-          <div class="favorite-grid">${html}</div>
+          <div class="favorite-grid">
+            ${unique.map(item => `
+              <article class="card mini ${item.type || 'game'}">
+                <button class="favorite-toggle active" data-favorite="${item.title}" title="Rimuovi dai preferiti">★</button>
+                <div>
+                  <h3>${item.title}</h3>
+                  <p>${item.subtitle || item.meta || 'Salvato'}</p>
+                </div>
+                <div class="meta">${item.badge || item.category || 'Preferito'}</div>
+              </article>
+            `).join('')}
+          </div>
         </section>
       `;
     }
 
     function renderScreen() {
       let content = renderHome();
-
       switch (state.activeScreen) {
         case 'tv': content = renderTV(); break;
         case 'radio': content = renderRadio(); break;
@@ -831,14 +894,29 @@
       });
 
       document.addEventListener('click', event => {
+        const favoriteButton = event.target.closest('[data-favorite]');
+        if (favoriteButton) {
+          toggleFavorite(favoriteButton.dataset.favorite);
+          return;
+        }
+
         const action = event.target.closest('[data-action]');
         if (!action) return;
 
         const actionName = action.dataset.action;
         if (actionName === 'open-tv') setScreen('tv');
         if (actionName === 'open-radio') setScreen('radio');
-        if (actionName === 'play-game') setScreen('games');
+        if (actionName === 'open-game') setScreen('games');
         if (actionName === 'open-community') setScreen('community');
+      });
+
+      document.addEventListener('click', event => {
+        const filterButton = event.target.closest('[data-filter-kind]');
+        if (!filterButton) return;
+        const kind = filterButton.dataset.filterKind;
+        const value = filterButton.dataset.filterValue;
+        state.filters[kind] = value;
+        renderScreen();
       });
 
       document.getElementById('settingsBtn').addEventListener('click', () => {
