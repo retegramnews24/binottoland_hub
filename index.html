@@ -42,6 +42,10 @@
         var(--bg);
     }
 
+    body.module-open {
+      overflow: hidden;
+    }
+
     button, input {
       font: inherit;
     }
@@ -468,6 +472,62 @@
       outline: none;
     }
 
+    .media-layer {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100dvh;
+      display: none;
+      background: var(--bg);
+      z-index: 200;
+      overflow: hidden;
+    }
+
+    .media-layer.open {
+      display: block;
+    }
+
+    .media-topbar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      background: rgba(9,13,21,.8);
+      border-bottom: 1px solid var(--line);
+      z-index: 2;
+    }
+
+    .media-topbar strong {
+      font-size: 13px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .media-close {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    .media-frame {
+      position: absolute;
+      inset: 58px 0 0 0;
+      width: 100%;
+      height: calc(100% - 58px);
+      border: 0;
+      background: #000;
+    }
+
     .bottom-nav {
       position: fixed;
       left: 50%;
@@ -550,6 +610,30 @@
     </nav>
   </div>
 
+  <div class="media-layer" id="tvLayer" aria-label="TV in primo piano">
+    <div class="media-topbar">
+      <strong>TV LIVE</strong>
+      <button class="media-close" id="closeTv">×</button>
+    </div>
+    <iframe class="media-frame" id="tvFrame" title="TV LIVE"></iframe>
+  </div>
+
+  <div class="media-layer" id="radioLayer" aria-label="Radio in primo piano">
+    <div class="media-topbar">
+      <strong>Radio</strong>
+      <button class="media-close" id="closeRadio">×</button>
+    </div>
+    <iframe class="media-frame" id="radioFrame" title="Radio live"></iframe>
+  </div>
+
+  <div class="media-layer" id="gameLayer" aria-label="Gioco in primo piano">
+    <div class="media-topbar">
+      <strong>Game</strong>
+      <button class="media-close" id="closeGame">×</button>
+    </div>
+    <iframe class="media-frame" id="gameFrame" title="Gioco"></iframe>
+  </div>
+
   <script>
     const tg = window.Telegram?.WebApp || null;
 
@@ -575,42 +659,181 @@
         { title: 'Suggerimento team', text: 'Nuovo canale dedicato a live e contenuti culturali.', votes: 67 }
       ],
       tv: [
-        { title: 'Binotto Live', subtitle: 'Notizie, talk, intrattenimento', badge: 'LIVE', type: 'tv' },
-        { title: 'Channel 24', subtitle: 'News e aggiornamenti comunitari', badge: 'LIVE', type: 'tv' },
-        { title: 'Cultura Hub', subtitle: 'Documentari e approfondimenti', badge: 'NEW', type: 'tv' },
-        { title: 'Sport Arena', subtitle: 'Eventi e live sportive', badge: 'LIVE', type: 'tv' },
-        { title: 'Music Box', subtitle: 'Video e mix musicali', badge: 'POP', type: 'tv' },
-        { title: 'Binotto Stories', subtitle: 'Momenti e contenuti della community', badge: 'HOT', type: 'tv' }
+        { title: 'Binotto Live', subtitle: 'Notizie, talk, intrattenimento', badge: 'LIVE', type: 'tv', action: 'Guarda' },
+        { title: 'Channel 24', subtitle: 'News e aggiornamenti comunitari', badge: 'LIVE', type: 'tv', action: 'Guarda' },
+        { title: 'Cultura Hub', subtitle: 'Documentari e approfondimenti', badge: 'NEW', type: 'tv', action: 'Guarda' },
+        { title: 'Sport Arena', subtitle: 'Eventi e live sportive', badge: 'LIVE', type: 'tv', action: 'Guarda' },
+        { title: 'Music Box', subtitle: 'Video e mix musicali', badge: 'POP', type: 'tv', action: 'Guarda' },
+        { title: 'Binotto Stories', subtitle: 'Momenti e contenuti della community', badge: 'HOT', type: 'tv', action: 'Guarda' }
       ],
       radio: [
-        { title: 'Binotto Radio', subtitle: 'Musica + talk', badge: 'POP', type: 'radio' },
-        { title: 'Nightwave', subtitle: 'Mix, chill, electronic', badge: 'CHILL', type: 'radio' },
-        { title: 'City FM', subtitle: 'Top hits e news', badge: 'HITS', type: 'radio' },
-        { title: 'Talkzone', subtitle: 'Discussioni e interviste', badge: 'TALK', type: 'radio' },
-        { title: 'Lounge 88', subtitle: 'Ambient e jams', badge: 'LOUNGE', type: 'radio' },
-        { title: 'Weekend Mix', subtitle: 'Set live e playlist', badge: 'LIVE', type: 'radio' }
+        { title: 'Binotto Radio', subtitle: 'Musica + talk', badge: 'POP', type: 'radio', action: 'Ascolta' },
+        { title: 'Nightwave', subtitle: 'Mix, chill, electronic', badge: 'CHILL', type: 'radio', action: 'Ascolta' },
+        { title: 'City FM', subtitle: 'Top hits e news', badge: 'HITS', type: 'radio', action: 'Ascolta' },
+        { title: 'Talkzone', subtitle: 'Discussioni e interviste', badge: 'TALK', type: 'radio', action: 'Ascolta' },
+        { title: 'Lounge 88', subtitle: 'Ambient e jams', badge: 'LOUNGE', type: 'radio', action: 'Ascolta' },
+        { title: 'Weekend Mix', subtitle: 'Set live e playlist', badge: 'LIVE', type: 'radio', action: 'Ascolta' }
       ],
       games: [
-        { title: '2048 Classic', subtitle: 'Puzzle classico · 4x4', badge: 'Arcade', type: 'game' },
-        { title: 'Moon Lander', subtitle: 'Missioni lunari · casuali', badge: 'Action', type: 'game' },
-        { title: 'Neon Snake', subtitle: 'Touch controls · velocità', badge: 'Arcade', type: 'game' },
-        { title: 'Tetris', subtitle: 'Combinazioni e line clear', badge: 'Puzzle', type: 'game' },
-        { title: 'Memory Grid', subtitle: 'Celebrazione visiva', badge: 'Brain', type: 'game' },
-        { title: 'Challenge Run', subtitle: 'Obiettivi quotidiani', badge: 'Daily', type: 'game' }
+        { title: '2048 Classic', subtitle: 'Puzzle classico · 4x4', badge: 'Arcade', type: 'game', action: 'Gioca' },
+        { title: 'Moon Lander', subtitle: 'Missioni lunari · casuali', badge: 'Action', type: 'game', action: 'Gioca' },
+        { title: 'Neon Snake', subtitle: 'Touch controls · velocità', badge: 'Arcade', type: 'game', action: 'Gioca' },
+        { title: 'Tetris', subtitle: 'Combinazioni e line clear', badge: 'Puzzle', type: 'game', action: 'Gioca' },
+        { title: 'Memory Grid', subtitle: 'Celebrazione visiva', badge: 'Brain', type: 'game', action: 'Gioca' },
+        { title: 'Challenge Run', subtitle: 'Obiettivi quotidiani', badge: 'Daily', type: 'game', action: 'Gioca' }
       ]
     };
 
     const state = {
       activeScreen: 'home',
       favorites: new Set(['TV Binottoland', 'DAB Radio', 'Neon Snake']),
-      filters: {
-        tv: 'all',
-        radio: 'all',
-        games: 'all'
-      }
+      filters: { tv: 'all', radio: 'all', games: 'all' }
     };
 
     const main = document.getElementById('main');
+    const tvLayer = document.getElementById('tvLayer');
+    const radioLayer = document.getElementById('radioLayer');
+    const gameLayer = document.getElementById('gameLayer');
+    const tvFrame = document.getElementById('tvFrame');
+    const radioFrame = document.getElementById('radioFrame');
+    const gameFrame = document.getElementById('gameFrame');
+
+    function buildTvDoc(title = 'TV LIVE Binottoland') {
+      return `<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    html,body{margin:0;height:100%;background:#090d15;color:#f5f7ff;font-family:system-ui,sans-serif;overflow:hidden}
+    body{display:grid;place-items:center;background:radial-gradient(circle at top, rgba(158,123,255,.22), transparent 28%), #090d15}
+    .screen{width:min(100%, 480px);padding:24px 18px 30px;display:grid;gap:18px}
+    .banner{padding:18px;border-radius:22px;background:linear-gradient(135deg, rgba(158,123,255,.24), rgba(17,24,39,.9));border:1px solid rgba(158,123,255,.35);box-shadow:0 16px 30px rgba(0,0,0,.28)}
+    .badge{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(114,231,255,.12);color:#72e7ff;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+    h1{margin:14px 0 8px;font-size:clamp(26px, 7vw, 38px);letter-spacing:-.04em}
+    p{margin:0;color:#9aa7c2;line-height:1.6}
+    .controls{display:flex;gap:10px;flex-wrap:wrap}
+    button{appearance:none;border:none;border-radius:12px;padding:12px 14px;font-weight:700;cursor:pointer}
+    .primary{background:linear-gradient(135deg,#9e7bff,#ff73b5);color:white}
+    .secondary{background:rgba(255,255,255,.04);color:#fff;border:1px solid rgba(255,255,255,.08)}
+    .meta{display:grid;grid-template-columns:repeat(3, minmax(0,1fr));gap:10px}
+    .meta div{padding:12px;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);text-align:center}
+    .meta strong{display:block;font-size:18px}
+    .meta span{font-size:10px;color:#9aa7c2;letter-spacing:.08em;text-transform:uppercase}
+  </style>
+</head>
+<body>
+  <div class="screen">
+    <div class="banner">
+      <span class="badge">Live</span>
+      <h1>${title}</h1>
+      <p>Programmi, news, intrattenimento e contenuti comunitari in diretta.</p>
+      <div class="controls" style="margin-top:16px">
+        <button class="primary" onclick="window.parent.postMessage({type:'hub-close-media'}, '*')">Chiudi</button>
+        <button class="secondary">Preferito</button>
+      </div>
+    </div>
+    <div class="meta">
+      <div><strong>12:30</strong><span>Ora</span></div>
+      <div><strong>HD</strong><span>Qualità</span></div>
+      <div><strong>24</strong><span>Live</span></div>
+    </div>
+  </div>
+</body>
+</html>`;
+    }
+
+    function buildRadioDoc(title = 'Binottoland Radio') {
+      return `<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    html,body{margin:0;height:100%;background:#090d15;color:#f5f7ff;font-family:system-ui,sans-serif;overflow:hidden}
+    body{display:grid;place-items:center;background:radial-gradient(circle at center, rgba(117,231,172,.12), transparent 28%), #090d15}
+    .screen{width:min(100%, 480px);padding:24px 18px 30px;display:grid;gap:14px}
+    .player{padding:22px 18px;border-radius:22px;background:linear-gradient(135deg, rgba(117,231,172,.18), rgba(17,24,39,.9));border:1px solid rgba(117,231,172,.25);box-shadow:0 14px 30px rgba(0,0,0,.24)}
+    .badge{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(117,231,172,.12);color:#75e7ac;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+    h1{margin:14px 0 8px;font-size:clamp(25px, 6.5vw, 36px);letter-spacing:-.04em}
+    p{margin:0;color:#9aa7c2;line-height:1.6}
+    .viz{height:90px;border-radius:16px;background:linear-gradient(90deg, rgba(255,255,255,.04), rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);display:flex;align-items:end;gap:4px;padding:14px 12px}
+    .viz span{display:block;flex:1;height:18%;border-radius:999px 999px 0 0;background:linear-gradient(180deg, #72e7ff, #75e7ac)}
+    .controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    button{appearance:none;border:none;border-radius:12px;padding:12px 14px;font-weight:700;cursor:pointer}
+    .primary{background:linear-gradient(135deg,#75e7ac,#72e7ff);color:#08120d}
+    .secondary{background:rgba(255,255,255,.04);color:#fff;border:1px solid rgba(255,255,255,.08)}
+  </style>
+</head>
+<body>
+  <div class="screen">
+    <div class="player">
+      <span class="badge">Streaming</span>
+      <h1>${title}</h1>
+      <p>Mix di musica, notizie e contenuti in diretta per la community Binottoland.</p>
+      <div class="viz" aria-label="Audio visualizer">
+        <span style="height:26%"></span>
+        <span style="height:58%"></span>
+        <span style="height:42%"></span>
+        <span style="height:76%"></span>
+        <span style="height:48%"></span>
+        <span style="height:88%"></span>
+        <span style="height:64%"></span>
+        <span style="height:52%"></span>
+      </div>
+      <div class="controls">
+        <button class="primary" onclick="window.parent.postMessage({type:'hub-close-media'}, '*')">Chiudi</button>
+        <button class="secondary">Preferito</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`;
+    }
+
+    function buildGameDoc(title = 'Mini Game') {
+      return `<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    html,body{margin:0;height:100%;background:#090d15;color:#f5f7ff;font-family:system-ui,sans-serif;overflow:hidden}
+    body{display:grid;place-items:center;background:radial-gradient(circle at top, rgba(255,114,180,.22), transparent 22%), #090d15}
+    .screen{width:min(100%, 480px);padding:24px 18px 30px;display:grid;gap:18px}
+    .panel{padding:20px;border-radius:22px;background:linear-gradient(135deg, rgba(255,114,180,.2), rgba(17,24,39,.94));border:1px solid rgba(255,114,180,.25)}
+    .badge{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(255,114,180,.12);color:#ff73b5;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+    h1{margin:14px 0 8px;font-size:clamp(30px, 7vw, 38px);letter-spacing:-.04em}
+    p{margin:0;color:#9aa7c2;line-height:1.6}
+    .board{margin-top:14px;display:grid;grid-template-columns:repeat(4, 1fr);gap:8px;background:rgba(255,255,255,.03);padding:12px;border:1px solid rgba(255,255,255,.08);border-radius:16px}
+    .tile{min-height:58px;border-radius:12px;display:grid;place-items:center;background:rgba(255,255,255,.04);font-weight:800;color:#dfe8ff}
+    .controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    button{appearance:none;border:none;border-radius:12px;padding:12px 14px;font-weight:700;cursor:pointer}
+    .primary{background:linear-gradient(135deg,#9e7bff,#ff73b5);color:white}
+    .secondary{background:rgba(255,255,255,.04);color:#fff;border:1px solid rgba(255,255,255,.08)}
+  </style>
+</head>
+<body>
+  <div class="screen">
+    <div class="panel">
+      <span class="badge">Demo</span>
+      <h1>${title}</h1>
+      <p>Modalità di prova locale. Lo spazio gioco è pronto per essere collegato a una logica completa.</p>
+      <div class="board">
+        <div class="tile">2</div><div class="tile">4</div><div class="tile">8</div><div class="tile">16</div>
+        <div class="tile">32</div><div class="tile">64</div><div class="tile">128</div><div class="tile">256</div>
+        <div class="tile">512</div><div class="tile">1024</div><div class="tile">2048</div><div class="tile">4096</div>
+        <div class="tile">—</div><div class="tile">—</div><div class="tile">—</div><div class="tile">—</div>
+      </div>
+      <div class="controls">
+        <button class="primary" onclick="window.parent.postMessage({type:'hub-close-media'}, '*')">Chiudi</button>
+        <button class="secondary">Gioca</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`;
+    }
 
     function getFavoriteState(title) {
       return state.favorites.has(title);
@@ -639,16 +862,15 @@
       `;
     }
 
-    function createItemCard(item, compact = false) {
+    function createItemCard(item) {
       const cardType = item.type || 'game';
       const favoriteActive = getFavoriteState(item.title);
-      const compactClass = compact ? 'mini' : '';
       return `
-        <article class="card ${compactClass} ${cardType}">
+        <article class="card ${cardType}">
           <button class="favorite-toggle ${favoriteActive ? 'active' : ''}" data-favorite="${item.title}" title="Aggiungi ai preferiti">★</button>
           <div>
             <h3>${item.title}</h3>
-            <p>${item.subtitle || item.meta}</p>
+            <p>${item.subtitle || item.meta || 'Salvato'}</p>
           </div>
           <div class="meta">${item.badge || item.category || 'Preferito'}</div>
           <button class="action" data-action="open-${item.type || 'game'}">${item.action || 'Apri'}</button>
@@ -681,7 +903,7 @@
         </article>
       `).join('');
 
-      const favoritesHtml = data.favoritesSeed.map(item => `
+      const favoritesSeed = data.favoritesSeed.map(item => `
         <article class="card mini ${item.type}">
           <button class="favorite-toggle ${getFavoriteState(item.title) ? 'active' : ''}" data-favorite="${item.title}" title="Aggiungi ai preferiti">★</button>
           <div>
@@ -742,7 +964,7 @@
               <h2>Preferiti</h2>
               <a href="#">Gestisci</a>
             </div>
-            <div class="favorite-grid">${favoritesHtml}</div>
+            <div class="favorite-grid">${favoritesSeed}</div>
           </section>
 
           <section class="section">
@@ -771,7 +993,7 @@
         return true;
       });
 
-      const cardsHtml = filtered.map(item => createItemCard(item, false)).join('');
+      const cardsHtml = filtered.map(createItemCard).join('');
 
       return `
         <section class="screen active">
@@ -779,7 +1001,6 @@
             <h1>${title}</h1>
             <span class="pill">${badgeLabel}</span>
           </div>
-
           <div class="chip-group">${chipsHtml}</div>
           <div class="games-grid">${cardsHtml}</div>
         </section>
@@ -805,11 +1026,9 @@
             <h1>Community</h1>
             <span class="pill">Attiva</span>
           </div>
-
           <div class="community-grid">
             ${data.community.map(createCommunityCard).join('')}
           </div>
-
           <div class="input-row">
             <input type="text" placeholder="Suggerisci un gioco o una proposta..." />
             <button class="primary-btn">Invia</button>
@@ -835,7 +1054,7 @@
               <h1>Preferiti</h1>
               <span class="pill">0</span>
             </div>
-            <div class="empty-panel">Nessun preferito salvato. Aggiungi canali, stazioni o giochi dal cuore.</div>
+            <div class="empty-panel" style="border:1px solid var(--line); background:var(--surface); border-radius:22px; padding:24px 14px; color:var(--muted); line-height:1.6;">Nessun preferito salvato. Aggiungi canali, stazioni o giochi dal cuore.</div>
           </section>
         `;
       }
@@ -884,6 +1103,35 @@
       renderScreen();
     }
 
+    function openTv() {
+      tvFrame.srcdoc = buildTvDoc('TV LIVE Binottoland');
+      tvLayer.classList.add('open');
+      document.body.classList.add('module-open');
+    }
+
+    function openRadio() {
+      radioFrame.srcdoc = buildRadioDoc('Binottoland Radio');
+      radioLayer.classList.add('open');
+      document.body.classList.add('module-open');
+    }
+
+    function openGame(title) {
+      const selected = data.games.find(item => item.title === title) || data.games[0];
+      gameFrame.srcdoc = buildGameDoc(selected.title);
+      gameLayer.classList.add('open');
+      document.body.classList.add('module-open');
+    }
+
+    function closeMedia() {
+      tvLayer.classList.remove('open');
+      radioLayer.classList.remove('open');
+      gameLayer.classList.remove('open');
+      document.body.classList.remove('module-open');
+      tvFrame.srcdoc = '';
+      radioFrame.srcdoc = '';
+      gameFrame.srcdoc = '';
+    }
+
     function attachHandlers() {
       document.querySelectorAll('[data-go]').forEach(btn => {
         btn.addEventListener('click', () => setScreen(btn.dataset.go));
@@ -904,10 +1152,12 @@
         if (!action) return;
 
         const actionName = action.dataset.action;
-        if (actionName === 'open-tv') setScreen('tv');
-        if (actionName === 'open-radio') setScreen('radio');
-        if (actionName === 'open-game') setScreen('games');
-        if (actionName === 'open-community') setScreen('community');
+        if (actionName === 'open-tv') openTv();
+        if (actionName === 'open-radio') openRadio();
+        if (actionName === 'open-game') {
+          const title = action.closest('.card')?.querySelector('h3')?.textContent || 'Moon Lander';
+          openGame(title);
+        }
       });
 
       document.addEventListener('click', event => {
@@ -928,6 +1178,16 @@
 
       document.getElementById('alertsBtn').addEventListener('click', () => {
         alert('Nessuna notifica nuova');
+      });
+
+      document.getElementById('closeTv').addEventListener('click', closeMedia);
+      document.getElementById('closeRadio').addEventListener('click', closeMedia);
+      document.getElementById('closeGame').addEventListener('click', closeMedia);
+
+      window.addEventListener('message', event => {
+        if (event.data && event.data.type === 'hub-close-media') {
+          closeMedia();
+        }
       });
     }
 
