@@ -27,6 +27,7 @@
     }
 
     * { box-sizing: border-box; }
+
     html, body {
       margin: 0;
       background: var(--bg);
@@ -155,11 +156,7 @@
       line-height: 1.55;
     }
 
-    .hero-actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
+    .hero-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
     .primary-btn, .secondary-btn, .ghost-btn, .chip {
       border: none;
@@ -444,23 +441,6 @@
       font-weight: 800;
     }
 
-    .input-row {
-      display: flex;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .input-row input {
-      flex: 1;
-      min-width: 0;
-      background: var(--surface);
-      color: var(--text);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 10px 12px;
-      outline: none;
-    }
-
     .media-layer {
       position: fixed;
       inset: 0;
@@ -556,6 +536,11 @@
       font-size: 14px;
     }
 
+    body.module-open #app,
+    body.module-open .bottom-nav {
+      display: none !important;
+    }
+
     @media (max-width: 380px) {
       .live-grid,
       .recent-grid,
@@ -577,7 +562,6 @@
         <div class="brand-mark">B</div>
         <span>Binottoland</span>
       </div>
-
       <div class="header-actions">
         <button class="icon-btn" id="settingsBtn" aria-label="Impostazioni">⚙</button>
         <button class="icon-btn" id="alertsBtn" aria-label="Notifiche">🔔</button>
@@ -693,7 +677,7 @@
     html,body{margin:0;height:100%;background:#090d15;color:#f5f7ff;font-family:system-ui,sans-serif;overflow:hidden}
     body{display:grid;place-items:center;background:radial-gradient(circle at top, rgba(158,123,255,.22), transparent 28%), #090d15}
     .screen{width:min(100%, 480px);padding:24px 18px 30px;display:grid;gap:18px}
-    .banner{padding:18px;border-radius:22px;background:linear-gradient(135deg, rgba(158,123,255,.24), rgba(17,24,39,.9));border:1px solid rgba(158,123,255,.35);box-shadow:0 16px 30px rgba(0,0,0,.28)}
+    .banner{padding:18px;border-radius:22px;background:linear-gradient(135deg, rgba(158,123,255,.24), rgba(17,24,39,.9));border:1px solid rgba(158,123,255,.35);box-shadow:0 16px 30px rgba(0,0,0,.24)}
     .badge{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(114,231,255,.12);color:#72e7ff;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
     h1{margin:14px 0 8px;font-size:clamp(26px, 7vw, 38px);letter-spacing:-.04em}
     p{margin:0;color:#9aa7c2;line-height:1.6}
@@ -738,11 +722,11 @@
     html,body{margin:0;height:100%;background:#090d15;color:#f5f7ff;font-family:system-ui,sans-serif;overflow:hidden}
     body{display:grid;place-items:center;background:radial-gradient(circle at center, rgba(117,231,172,.12), transparent 28%), #090d15}
     .screen{width:min(100%, 480px);padding:24px 18px 30px;display:grid;gap:14px}
-    .player{padding:22px 18px;border-radius:22px;background:linear-gradient(135deg, rgba(117,231,172,.18), rgba(17,24,39,.9));border:1px solid rgba(117,231,172,.25);box-shadow:0 14px 30px rgba(0,0,0,.24)}
+    .player{padding:22px 18px;border-radius:22px;background:linear-gradient(135deg, rgba(117,231,172,.18), rgba(17,24,39,.9));border:1px solid rgba(117,231,172,.25);box-shadow:0 14px 30px rgba(0,0,0,.22)}
     .badge{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(117,231,172,.12);color:#75e7ac;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
     h1{margin:14px 0 8px;font-size:clamp(25px, 6.5vw, 36px);letter-spacing:-.04em}
     p{margin:0;color:#9aa7c2;line-height:1.6}
-    .viz{height:90px;border-radius:16px;background:linear-gradient(90deg, rgba(255,255,255,.04), rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);display:flex;align-items:end;gap:4px;padding:14px 12px}
+    .viz{height:90px;border-radius:16px;background:linear-gradient(90deg, rgba(255,255,255,.04), rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);display:flex;align-items:end;gap:4px}
     .viz span{display:block;flex:1;height:18%;border-radius:999px 999px 0 0;background:linear-gradient(180deg, #72e7ff, #75e7ac)}
     .controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
     button{appearance:none;border:none;border-radius:12px;padding:12px 14px;font-weight:700;cursor:pointer}
@@ -776,63 +760,6 @@
 </html>`;
     }
 
-    function buildGameDoc(title = 'Mini Game') {
-      return `<!doctype html>
-<html lang="it">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <style>
-    html,body{margin:0;height:100%;background:#090d15;color:#f5f7ff;font-family:system-ui,sans-serif;overflow:hidden}
-    body{display:grid;place-items:center;background:radial-gradient(circle at top, rgba(255,114,180,.22), transparent 22%), #090d15}
-    .screen{width:min(100%, 480px);padding:24px 18px 30px;display:grid;gap:18px}
-    .panel{padding:20px;border-radius:22px;background:linear-gradient(135deg, rgba(255,114,180,.2), rgba(17,24,39,.94));border:1px solid rgba(255,114,180,.25)}
-    .badge{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(255,114,180,.12);color:#ff73b5;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
-    h1{margin:14px 0 8px;font-size:clamp(30px, 7vw, 38px);letter-spacing:-.04em}
-    p{margin:0;color:#9aa7c2;line-height:1.6}
-    .board{margin-top:14px;display:grid;grid-template-columns:repeat(4, 1fr);gap:8px;background:rgba(255,255,255,.03);padding:12px;border:1px solid rgba(255,255,255,.08);border-radius:16px}
-    .tile{min-height:58px;border-radius:12px;display:grid;place-items:center;background:rgba(255,255,255,.04);font-weight:800;color:#dfe8ff}
-    .controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-    button{appearance:none;border:none;border-radius:12px;padding:12px 14px;font-weight:700;cursor:pointer}
-    .primary{background:linear-gradient(135deg,#9e7bff,#ff73b5);color:white}
-    .secondary{background:rgba(255,255,255,.04);color:#fff;border:1px solid rgba(255,255,255,.08)}
-  </style>
-</head>
-<body>
-  <div class="screen">
-    <div class="panel">
-      <span class="badge">Demo</span>
-      <h1>${title}</h1>
-      <p>Modalità di prova locale. Lo spazio gioco è pronto per essere collegato a una logica completa.</p>
-      <div class="board">
-        <div class="tile">2</div><div class="tile">4</div><div class="tile">8</div><div class="tile">16</div>
-        <div class="tile">32</div><div class="tile">64</div><div class="tile">128</div><div class="tile">256</div>
-        <div class="tile">512</div><div class="tile">1024</div><div class="tile">2048</div><div class="tile">4096</div>
-        <div class="tile">—</div><div class="tile">—</div><div class="tile">—</div><div class="tile">—</div>
-      </div>
-      <div class="controls">
-        <button class="primary" onclick="window.parent.postMessage({type:'hub-close-media'}, '*')">Chiudi</button>
-        <button class="secondary">Gioca</button>
-      </div>
-    </div>
-  </div>
-</body>
-</html>`;
-    }
-
-    function getFavoriteState(title) {
-      return state.favorites.has(title);
-    }
-
-    function toggleFavorite(title) {
-      if (state.favorites.has(title)) {
-        state.favorites.delete(title);
-      } else {
-        state.favorites.add(title);
-      }
-      renderScreen();
-    }
-
     function createLiveCard(item) {
       const cardType = item.type === 'tv' ? 'tv' : item.type === 'radio' ? 'radio' : 'game';
       return `
@@ -849,10 +776,10 @@
 
     function createItemCard(item) {
       const cardType = item.type || 'game';
-      const favoriteActive = getFavoriteState(item.title);
+      const fav = state.favorites.has(item.title);
       return `
         <article class="card ${cardType}">
-          <button class="favorite-toggle ${favoriteActive ? 'active' : ''}" data-favorite="${item.title}" title="Aggiungi ai preferiti">★</button>
+          <button class="favorite-toggle ${fav ? 'active' : ''}" data-favorite="${item.title}" title="Aggiungi ai preferiti">★</button>
           <div>
             <h3>${item.title}</h3>
             <p>${item.subtitle || item.meta || 'Salvato'}</p>
@@ -890,7 +817,7 @@
 
       const favoritesSeed = data.favoritesSeed.map(item => `
         <article class="card mini ${item.type}">
-          <button class="favorite-toggle ${getFavoriteState(item.title) ? 'active' : ''}" data-favorite="${item.title}" title="Aggiungi ai preferiti">★</button>
+          <button class="favorite-toggle ${state.favorites.has(item.title) ? 'active' : ''}" data-favorite="${item.title}" title="Aggiungi ai preferiti">★</button>
           <div>
             <h3>${item.title}</h3>
             <p>${item.meta}</p>
@@ -898,8 +825,6 @@
           <div class="meta">${item.category}</div>
         </article>
       `).join('');
-
-      const communityHtml = data.community.map(createCommunityCard).join('');
 
       return `
         <section class="screen active">
@@ -957,7 +882,7 @@
               <h2>Community</h2>
               <a href="#">Vota</a>
             </div>
-            <div class="community-grid">${communityHtml}</div>
+            <div class="community-grid">${data.community.map(createCommunityCard).join('')}</div>
           </section>
         </section>
       `;
@@ -967,7 +892,7 @@
       const chips = ['all', 'live', 'popular', 'new'];
       const activeChip = state.filters[kind] || 'all';
       const chipsHtml = chips.map(chip => `
-        <button class="chip ${chip === activeChip ? 'active' : ''}" data-filter-kind="${kind}" data-filter-value="${chip}">${chip === 'all' ? 'Tutti' : chip === 'live' ? 'Live' : chip === 'popular' ? 'Popolari' : 'Novità'}</button>
+        <button class="chip ${chip === activeChip ? 'active' : ''}" data-filter-kind="${kind}" data-filter-value="${chip}">${chip === 'all' ? 'Tutti' : chip === 'live' ? 'Live' : chip === 'popular' ? 'Popolari' : 'Nuovi'}</button>
       `).join('');
 
       const filtered = items.filter(item => {
@@ -978,8 +903,6 @@
         return true;
       });
 
-      const cardsHtml = filtered.map(createItemCard).join('');
-
       return `
         <section class="screen active">
           <div class="page-header">
@@ -987,7 +910,7 @@
             <span class="pill">${badgeLabel}</span>
           </div>
           <div class="chip-group">${chipsHtml}</div>
-          <div class="games-grid">${cardsHtml}</div>
+          <div class="games-grid">${filtered.map(createItemCard).join('')}</div>
         </section>
       `;
     }
@@ -1001,186 +924,149 @@
         <section class="screen active">
           <div class="page-header">
             <h1>Community</h1>
-            <span class="pill">Attiva</span>
+            <span class="pill">Vota</span>
           </div>
-          <div class="community-grid">
-            ${data.community.map(createCommunityCard).join('')}
-          </div>
-          <div class="input-row">
-            <input type="text" placeholder="Suggerisci un gioco o una proposta..." />
-            <button class="primary-btn">Invia</button>
-          </div>
-        </section>
-      `;
-    }
-
-    function renderFavorites() {
-      const favorites = [
-        ...data.favoritesSeed.filter(item => getFavoriteState(item.title)),
-        ...data.games.filter(item => getFavoriteState(item.title)),
-        ...data.radio.filter(item => getFavoriteState(item.title)),
-        ...data.tv.filter(item => getFavoriteState(item.title))
-      ];
-
-      const unique = Array.from(new Map(favorites.map(item => [item.title, item])).values());
-
-      if (!unique.length) {
-        return `
-          <section class="screen active">
-            <div class="page-header">
-              <h1>Preferiti</h1>
-              <span class="pill">0</span>
-            </div>
-            <div class="empty-panel" style="border:1px solid var(--line); background:var(--surface); border-radius:22px; padding:24px 14px; color:var(--muted); line-height:1.6;">Nessun preferito salvato. Aggiungi canali, stazioni o giochi dal cuore.</div>
-          </section>
-        `;
-      }
-
-      return `
-        <section class="screen active">
-          <div class="page-header">
-            <h1>Preferiti</h1>
-            <span class="pill">${unique.length}</span>
-          </div>
-          <div class="favorite-grid">
-            ${unique.map(item => `
-              <article class="card mini ${item.type || 'game'}">
-                <button class="favorite-toggle active" data-favorite="${item.title}" title="Rimuovi dai preferiti">★</button>
-                <div>
-                  <h3>${item.title}</h3>
-                  <p>${item.subtitle || item.meta || 'Salvato'}</p>
-                </div>
-                <div class="meta">${item.badge || item.category || 'Preferito'}</div>
-              </article>
-            `).join('')}
-          </div>
+          <div class="community-grid">${data.community.map(createCommunityCard).join('')}</div>
         </section>
       `;
     }
 
     function renderScreen() {
-      let content = renderHome();
-      switch (state.activeScreen) {
-        case 'tv': content = renderTV(); break;
-        case 'radio': content = renderRadio(); break;
-        case 'games': content = renderGames(); break;
-        case 'community': content = renderCommunity(); break;
-        case 'favorites': content = renderFavorites(); break;
-        default: content = renderHome();
-      }
+      const map = {
+        home: renderHome,
+        tv: renderTV,
+        radio: renderRadio,
+        games: renderGames,
+        community: renderCommunity
+      };
 
-      main.innerHTML = content;
-      document.querySelectorAll('.nav-btn').forEach(btn => {
+      main.innerHTML = map[state.activeScreen]?.() || renderHome();
+
+      document.querySelectorAll('.nav-btn').forEach((btn) => {
         btn.classList.toggle('active', btn.dataset.screen === state.activeScreen);
+      });
+
+      document.querySelectorAll('[data-go]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          switch (btn.dataset.go) {
+            case 'tv': openTV(); break;
+            case 'radio': openRadio(); break;
+            case 'games': state.activeScreen = 'games'; renderScreen(); break;
+            case 'community': state.activeScreen = 'community'; renderScreen(); break;
+            case 'favorites': state.activeScreen = 'home'; renderScreen(); break;
+            default: state.activeScreen = btn.dataset.go; renderScreen(); break;
+          }
+        });
+      });
+
+      document.querySelectorAll('[data-action]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const action = btn.dataset.action;
+          if (action === 'open-tv') openTV();
+          if (action === 'open-radio') openRadio();
+          if (action === 'open-game') {
+            state.activeScreen = 'games';
+            renderScreen();
+          }
+        });
+      });
+
+      document.querySelectorAll('[data-favorite]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const key = btn.dataset.favorite;
+          if (state.favorites.has(key)) state.favorites.delete(key);
+          else state.favorites.add(key);
+          renderScreen();
+        });
+      });
+
+      document.querySelectorAll('[data-filter-kind]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const kind = btn.dataset.filterKind;
+          const value = btn.dataset.filterValue;
+          state.filters[kind] = value;
+          renderScreen();
+        });
       });
     }
 
-    function setScreen(screen) {
-      state.activeScreen = screen;
-      renderScreen();
+    function openTV() {
+      if (!tvFrame.srcdoc) tvFrame.srcdoc = buildTvDoc('TV LIVE Binottoland');
+      tvLayer.classList.add('open');
+      radioLayer.classList.remove('open');
+      gameLayer.classList.remove('open');
+      document.body.classList.add('module-open');
     }
 
-    function openTv() {
-      tvFrame.srcdoc = buildTvDoc('TV LIVE Binottoland');
-      tvLayer.classList.add('open');
-      document.body.classList.add('module-open');
+    function closeTV() {
+      tvLayer.classList.remove('open');
+      if (!radioLayer.classList.contains('open') && !gameLayer.classList.contains('open')) {
+        document.body.classList.remove('module-open');
+      }
     }
 
     function openRadio() {
-      radioFrame.srcdoc = buildRadioDoc('Binottoland Radio');
+      if (!radioFrame.srcdoc) radioFrame.srcdoc = buildRadioDoc('BINOTTO RADIO');
       radioLayer.classList.add('open');
+      tvLayer.classList.remove('open');
+      gameLayer.classList.remove('open');
       document.body.classList.add('module-open');
     }
 
-    function openGame(title) {
-      const selected = data.games.find(item => item.title === title) || data.games[0];
-      gameFrame.srcdoc = buildGameDoc(selected.title);
-      gameLayer.classList.add('open');
-      document.body.classList.add('module-open');
+    function closeRadio() {
+      radioLayer.classList.remove('open');
+      if (!tvLayer.classList.contains('open') && !gameLayer.classList.contains('open')) {
+        document.body.classList.remove('module-open');
+      }
     }
 
     function closeMedia() {
-      tvLayer.classList.remove('open');
-      radioLayer.classList.remove('open');
+      closeTV();
+      closeRadio();
       gameLayer.classList.remove('open');
-      document.body.classList.remove('module-open');
-      tvFrame.srcdoc = '';
-      radioFrame.srcdoc = '';
-      gameFrame.srcdoc = '';
+      if (!tvLayer.classList.contains('open') && !radioLayer.classList.contains('open')) {
+        document.body.classList.remove('module-open');
+      }
     }
 
-    function attachHandlers() {
-      document.querySelectorAll('[data-go]').forEach(btn => {
-        btn.addEventListener('click', () => setScreen(btn.dataset.go));
-      });
-
-      document.querySelectorAll('[data-screen]').forEach(btn => {
-        btn.addEventListener('click', () => setScreen(btn.dataset.screen));
-      });
-
-      document.addEventListener('click', event => {
-        const favoriteButton = event.target.closest('[data-favorite]');
-        if (favoriteButton) {
-          toggleFavorite(favoriteButton.dataset.favorite);
+    document.querySelectorAll('[data-screen]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        if (btn.dataset.screen === 'tv') {
+          openTV();
           return;
         }
-
-        const action = event.target.closest('[data-action]');
-        if (!action) return;
-
-        const actionName = action.dataset.action;
-        if (actionName === 'open-tv') openTv();
-        if (actionName === 'open-radio') openRadio();
-        if (actionName === 'open-game') {
-          const title = action.closest('.card')?.querySelector('h3')?.textContent || 'Moon Lander';
-          openGame(title);
+        if (btn.dataset.screen === 'radio') {
+          openRadio();
+          return;
         }
-      });
-
-      document.addEventListener('click', event => {
-        const filterButton = event.target.closest('[data-filter-kind]');
-        if (!filterButton) return;
-        const kind = filterButton.dataset.filterKind;
-        const value = filterButton.dataset.filterValue;
-        state.filters[kind] = value;
+        state.activeScreen = btn.dataset.screen;
         renderScreen();
       });
+    });
 
-      document.getElementById('settingsBtn').addEventListener('click', () => {
-        if (tg && tg.HapticFeedback) {
-          try { tg.HapticFeedback.impactOccurred('light'); } catch (_) {}
-        }
-        alert('Impostazioni Binottoland');
-      });
+    document.getElementById('closeTv')?.addEventListener('click', closeTV);
+    document.getElementById('closeRadio')?.addEventListener('click', closeRadio);
+    document.getElementById('closeGame')?.addEventListener('click', () => {
+      gameLayer.classList.remove('open');
+      if (!tvLayer.classList.contains('open') && !radioLayer.classList.contains('open')) {
+        document.body.classList.remove('module-open');
+      }
+    });
 
-      document.getElementById('alertsBtn').addEventListener('click', () => {
-        alert('Nessuna notifica nuova');
-      });
+    window.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'hub-close-media') {
+        closeMedia();
+      }
+    });
 
-      document.getElementById('closeTv').addEventListener('click', closeMedia);
-      document.getElementById('closeRadio').addEventListener('click', closeMedia);
-      document.getElementById('closeGame').addEventListener('click', closeMedia);
-
-      window.addEventListener('message', event => {
-        if (event.data && event.data.type === 'hub-close-media') {
-          closeMedia();
-        }
-      });
-    }
-
-    function initTelegram() {
-      if (!tg) return;
+    if (tg) {
       try {
         tg.ready();
         tg.expand();
-        tg.setHeaderColor?.('#090d15');
-        tg.setBackgroundColor?.('#090d15');
-      } catch (_) {}
+      } catch (e) {}
     }
 
-    initTelegram();
     renderScreen();
-    attachHandlers();
   </script>
 </body>
 </html>
